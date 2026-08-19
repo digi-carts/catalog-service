@@ -7,6 +7,7 @@ import com.digicart.catalog.entity.Category;
 import com.digicart.catalog.entity.Product;
 import com.digicart.catalog.repository.CategoryRepository;
 import com.digicart.catalog.repository.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -40,6 +41,7 @@ public class ProductService {
      * @param productRepository product repository collaborator
      * @param categoryRepository category repository collaborator
      */
+    @Autowired
     public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
         this(productRepository, categoryRepository, RestClient.create());
     }

@@ -6,12 +6,19 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 The version in this file matches `<version>` in `pom.xml`.
 
+
+
 ## [1.1.1] - 2026-08-19
 
 ### Added
 - JavaDoc on all public methods (including constructors and DTO accessors)
 - REST API reference at `doc/api.md` (generated from Spring mappings)
 - Service overview restored at `doc/README.md`
+
+### Fixed
+- Cucumber component tests boot against in-memory H2 (`application-test.yml`); Liquibase is off and Hibernate `ddl-auto` is `create-drop`
+- `@Autowired` on `ProductService`'s two-argument constructor so Spring Boot tests pick it over the package-private `RestClient` constructor
+
 
 ## [1.1.0] - 2026-08-19
 
