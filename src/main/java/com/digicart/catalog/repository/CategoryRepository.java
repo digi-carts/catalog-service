@@ -10,6 +10,6 @@ import java.util.UUID;
 public interface CategoryRepository extends JpaRepository<Category, UUID> {
     List<Category> findByStoreIdOrderByNameAsc(String storeId);
     Optional<Category> findByStoreIdAndNameAndParentIsNull(String storeId, String name);
-    Optional<Category> findByStoreIdAndNameAndParentId(String storeId, String name, UUID parentId);
+    Optional<Category> findByStoreIdAndNameAndParent_Id(String storeId, String name, UUID parentId);
     boolean existsByIdAndStoreId(UUID id, String storeId);
 }

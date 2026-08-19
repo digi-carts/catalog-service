@@ -47,7 +47,7 @@ public class CategoryService {
         // Return existing if duplicate
         Optional<Category> existing = parentId == null
             ? categoryRepository.findByStoreIdAndNameAndParentIsNull(storeId, req.name())
-            : categoryRepository.findByStoreIdAndNameAndParentId(storeId, req.name(), parentId);
+            : categoryRepository.findByStoreIdAndNameAndParent_Id(storeId, req.name(), parentId);
         if (existing.isPresent()) return existing.get();
 
         Category category = new Category();
