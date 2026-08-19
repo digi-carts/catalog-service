@@ -96,3 +96,7 @@ mvn spring-boot:run
 - [order-service](https://github.com/digi-carts/order-service/blob/stage/doc/README.md) (stock deduct)
 - [storefront](https://github.com/digi-carts/storefront/blob/stage/doc/README.md)
 - [merchant-ui](https://github.com/digi-carts/merchant-ui/blob/stage/doc/README.md) catalog / stock
+
+## REST API reference
+
+See [api.md](api.md) for every HTTP endpoint generated from Spring controllers.

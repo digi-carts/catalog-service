@@ -22,17 +22,27 @@ public class HttpStepDefinitions {
 
     @When("I GET {string}")
     public void iGet(String path) throws Exception {
-        lastResult = mockMvc.perform(get(path).accept(MediaType.APPLICATION_JSON)).andReturn();
+        lastResult = mockMvc.perform(get(path)
+                .header("X-User-Id", "test-user")
+                .header("X-User-Role", "ADMIN")
+                .accept(MediaType.APPLICATION_JSON)).andReturn();
     }
 
     @When("I GET {string} with store header {string}")
     public void iGetWithStore(String path, String storeId) throws Exception {
-        lastResult = mockMvc.perform(get(path).header("x-store-id", storeId).accept(MediaType.APPLICATION_JSON)).andReturn();
+        lastResult = mockMvc.perform(get(path)
+                .header("x-store-id", storeId)
+                .header("X-User-Id", "test-user")
+                .header("X-User-Role", "ADMIN")
+                .accept(MediaType.APPLICATION_JSON)).andReturn();
     }
 
     @When("I POST {string} with body {string}")
     public void iPost(String path, String body) throws Exception {
-        lastResult = mockMvc.perform(post(path).contentType(MediaType.APPLICATION_JSON).content(body)).andReturn();
+        lastResult = mockMvc.perform(post(path)
+                .header("X-User-Id", "test-user")
+                .header("X-User-Role", "ADMIN")
+                .contentType(MediaType.APPLICATION_JSON).content(body)).andReturn();
     }
 
     @Then("the response status is {int}")

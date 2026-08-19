@@ -13,7 +13,10 @@ import java.util.Map;
  */
 @RestController
 public class HealthController {
-
+    /**
+     * Handles {@code GET /health} and {@code GET /api/health}.
+     * @return HTTP response
+     */
     @GetMapping(path = {"/health", "/api/health"}, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, String>> health() {
         return ResponseEntity.ok(Map.of("status", "ok", "service", "catalog-service"));

@@ -21,10 +21,27 @@ public class ProductController {
 
     private final ProductService productService;
 
+    /**
+     * Creates a new {@code ProductController}.
+     *
+     * @param productService product service collaborator
+     */
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
 
+    /**
+     * Handles GET.
+     *
+     * @param storeId store (tenant) identifier
+     * @param search free-text search
+     * @param tag product tag filter
+     * @param category category filter
+     * @param sort sort expression
+     * @param page 1-based page index
+     * @param limit page size
+     * @return HTTP response
+     */
     @GetMapping
     public ResponseEntity<?> list(
         @RequestHeader(value = "x-store-id", required = false) String storeId,
@@ -40,6 +57,12 @@ public class ProductController {
         return ResponseEntity.ok(productService.findAll(storeId, search, tag, category, sort, page, limit));
     }
 
+    /**
+     * Handles {@code GET /stock-summary}.
+     *
+     * @param storeId store (tenant) identifier
+     * @return HTTP response
+     */
     @GetMapping("/stock-summary")
     public ResponseEntity<?> stockSummary(
         @RequestHeader(value = "x-store-id", required = false) String storeId
@@ -49,6 +72,12 @@ public class ProductController {
         return ResponseEntity.ok(productService.stockSummary(storeId));
     }
 
+    /**
+     * Handles {@code GET /tags}.
+     *
+     * @param storeId store (tenant) identifier
+     * @return HTTP response
+     */
     @GetMapping("/tags")
     public ResponseEntity<?> tags(
         @RequestHeader(value = "x-store-id", required = false) String storeId
@@ -58,6 +87,13 @@ public class ProductController {
         return ResponseEntity.ok(Map.of("tags", productService.findTags(storeId)));
     }
 
+    /**
+     * Handles {@code GET /{id}}.
+     *
+     * @param id resource identifier
+     * @param storeId store (tenant) identifier
+     * @return HTTP response
+     */
     @GetMapping("/{id}")
     public ResponseEntity<?> getOne(
         @PathVariable String id,
@@ -70,6 +106,14 @@ public class ProductController {
             .orElse(ResponseEntity.status(404).body(Map.of("error", "Product not found")));
     }
 
+    /**
+     * Handles POST.
+     *
+     * @param storeId store (tenant) identifier
+     * @param userEmail caller email ({@code x-user-email})
+     * @param req request payload
+     * @return HTTP response
+     */
     @PostMapping
     public ResponseEntity<?> create(
         @RequestHeader(value = "x-store-id", required = false) String storeId,
@@ -86,6 +130,14 @@ public class ProductController {
         }
     }
 
+    /**
+     * Handles {@code PATCH /{id}}.
+     *
+     * @param id resource identifier
+     * @param storeId store (tenant) identifier
+     * @param req request payload
+     * @return HTTP response
+     */
     @PatchMapping("/{id}")
     public ResponseEntity<?> update(
         @PathVariable UUID id,
@@ -104,6 +156,14 @@ public class ProductController {
         }
     }
 
+    /**
+     * Handles {@code DELETE /{id}}.
+     *
+     * @param id resource identifier
+     * @param storeId store (tenant) identifier
+     * @param role caller role
+     * @return HTTP response
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(
         @PathVariable UUID id,
@@ -120,6 +180,12 @@ public class ProductController {
         }
     }
 
+    /**
+     * Handles {@code POST /deduct-stock}.
+     *
+     * @param req request payload
+     * @return HTTP response
+     */
     @PostMapping("/deduct-stock")
     public ResponseEntity<?> deductStock(@RequestBody StockDeductRequest req) {
         if (req.items() == null || req.items().isEmpty())
@@ -128,6 +194,14 @@ public class ProductController {
         return ResponseEntity.ok(Map.of("ok", true));
     }
 
+    /**
+     * Handles {@code POST /{id}/images-url}.
+     *
+     * @param id resource identifier
+     * @param storeId store (tenant) identifier
+     * @param body JSON request body
+     * @return HTTP response
+     */
     @PostMapping("/{id}/images-url")
     public ResponseEntity<?> addImageUrl(
         @PathVariable UUID id,

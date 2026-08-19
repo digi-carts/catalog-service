@@ -63,26 +63,123 @@ public class Product {
     @Column(name = "updated_at")
     private Instant updatedAt;
 
+    /**
+     * Returns id.
+     * @return the uuid
+     */
     public UUID getId() { return id; }
+    /**
+     * Returns store id.
+     * @return the string
+     */
     public String getStoreId() { return storeId; }
+    /**
+     * Sets store id.
+     *
+     * @param storeId store (tenant) identifier
+     */
     public void setStoreId(String storeId) { this.storeId = storeId; }
+    /**
+     * Returns category.
+     * @return the category
+     */
     public Category getCategory() { return category; }
+    /**
+     * Sets category.
+     *
+     * @param category category filter
+     */
     public void setCategory(Category category) { this.category = category; }
+    /**
+     * Returns category id.
+     * @return the uuid
+     */
     public UUID getCategoryId() { return category != null ? category.getId() : null; }
+    /**
+     * Returns name.
+     * @return the string
+     */
     public String getName() { return name; }
+    /**
+     * Sets name.
+     *
+     * @param name name
+     */
     public void setName(String name) { this.name = name; }
+    /**
+     * Returns description.
+     * @return the string
+     */
     public String getDescription() { return description; }
+    /**
+     * Sets description.
+     *
+     * @param description description
+     */
     public void setDescription(String description) { this.description = description; }
+    /**
+     * Returns price.
+     * @return the double
+     */
     public Double getPrice() { return price; }
+    /**
+     * Sets price.
+     *
+     * @param price price
+     */
     public void setPrice(Double price) { this.price = price; }
+    /**
+     * Returns stock.
+     * @return the integer
+     */
     public Integer getStock() { return stock; }
+    /**
+     * Sets stock.
+     *
+     * @param stock stock
+     */
     public void setStock(Integer stock) { this.stock = stock; }
+    /**
+     * Returns images.
+     * @return matching records
+     */
     public List<String> getImages() { return images; }
+    /**
+     * Sets images.
+     *
+     * @param images images
+     */
     public void setImages(List<String> images) { this.images = images; }
+    /**
+     * Returns tags.
+     * @return matching records
+     */
     public List<String> getTags() { return tags; }
+    /**
+     * Sets tags.
+     *
+     * @param tags tags
+     */
     public void setTags(List<String> tags) { this.tags = tags; }
+    /**
+     * Returns specs.
+     * @return matching records
+     */
     public List<Spec> getSpecs() { return specs; }
+    /**
+     * Sets specs.
+     *
+     * @param specs specs
+     */
     public void setSpecs(List<Spec> specs) { this.specs = specs; }
+    /**
+     * Returns created at.
+     * @return the instant
+     */
     public Instant getCreatedAt() { return createdAt; }
+    /**
+     * Returns updated at.
+     * @return the instant
+     */
     public Instant getUpdatedAt() { return updatedAt; }
 }
