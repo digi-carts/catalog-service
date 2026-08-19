@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: catalog-service
+  datasource:
+    url: ${DATABASE_URL}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    default-schema: catalog_svc
+    liquibase-schema: catalog_svc
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+server:
+  port: ${PORT:3004}
+
+platform:
+  service:
+    url: ${PLATFORM_SERVICE_URL:http://platform-service:3002}
+
+gcs:
+  bucket: ${GCS_BUCKET:}

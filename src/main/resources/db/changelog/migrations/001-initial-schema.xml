@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="001-create-schema" author="digi-cart">
+        <sql>CREATE SCHEMA IF NOT EXISTS catalog_svc</sql>
+    </changeSet>
+
+    <changeSet id="002-create-category" author="digi-cart">
+        <createTable tableName="category" schemaName="catalog_svc">
+            <column name="id" type="UUID" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="store_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="parent_id" type="UUID"/>
+            <column name="created_at" type="TIMESTAMPTZ" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+            baseTableSchemaName="catalog_svc"
+            baseTableName="category"
+            baseColumnNames="parent_id"
+            referencedTableSchemaName="catalog_svc"
+            referencedTableName="category"
+            referencedColumnNames="id"
+            constraintName="fk_category_parent"
+            onDelete="SET NULL"/>
+
+        <sql>
+            CREATE UNIQUE INDEX uq_category_store_name_parent
+            ON catalog_svc.category (store_id, name, parent_id) NULLS NOT DISTINCT
+        </sql>
+    </changeSet>
+
+    <changeSet id="003-create-product" author="digi-cart">
+        <createTable tableName="product" schemaName="catalog_svc">
+            <column name="id" type="UUID" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="store_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_id" type="UUID"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT"/>
+            <column name="price" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="stock" type="INTEGER" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="images" type="JSONB" defaultValue="'[]'::jsonb">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tags" type="JSONB" defaultValue="'[]'::jsonb">
+                <constraints nullable="false"/>
+            </column>
+            <column name="specs" type="JSONB" defaultValue="'[]'::jsonb">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMPTZ" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMPTZ" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+            baseTableSchemaName="catalog_svc"
+            baseTableName="product"
+            baseColumnNames="category_id"
+            referencedTableSchemaName="catalog_svc"
+            referencedTableName="category"
+            referencedColumnNames="id"
+            constraintName="fk_product_category"
+            onDelete="SET NULL"/>
+
+        <createIndex tableName="product" schemaName="catalog_svc" indexName="idx_product_store_id">
+            <column name="store_id"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
