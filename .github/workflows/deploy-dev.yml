@@ -6,7 +6,7 @@ on:
 
 env:
   REGION: us-east1
-  IMAGE: us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/digi-cart/digi-cart-catalog-service
+  IMAGE: us-east1-docker.pkg.dev/digi-carts-dev/digi-cart/digi-cart-catalog-service
   SERVICE: digi-cart-catalog-service-dev
 
 jobs:
@@ -17,7 +17,7 @@ jobs:
 
       - uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          credentials_json: ${{ secrets.GCP_DEV_SA_KEY }}
 
       - uses: google-github-actions/setup-gcloud@v2
 
