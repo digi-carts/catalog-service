@@ -16,7 +16,7 @@ import java.util.UUID;
  * REST controller exposing product HTTP APIs for <em>catalog-service</em>.
  */
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/api/products")
 public class ProductController {
 
     private final ProductService productService;
