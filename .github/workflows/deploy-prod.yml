@@ -6,12 +6,43 @@ on:
 
 env:
   REGION: us-east1
-  IMAGE: us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/digi-cart/digi-cart-catalog-service
+  IMAGE: us-east1-docker.pkg.dev/digi-carts/digi-cart/digi-cart-catalog-service
   SERVICE: digi-cart-catalog-service
 
 jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      version: ${{ steps.tag.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compute next patch version
+        id: tag
+        run: |
+          latest=$(git tag --list 'v*' --sort=-version:refname | head -n1)
+          if [ -z "$latest" ]; then
+            next="v0.0.1"
+          else
+            IFS='.' read -r major minor patch <<< "${latest#v}"
+            next="v${major}.${minor}.$((patch + 1))"
+          fi
+          echo "version=${next}" >> "$GITHUB_OUTPUT"
+          git tag "$next"
+          git push origin "$next"
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.version }}
+          generate_release_notes: true
+
   build-deploy:
     runs-on: ubuntu-latest
+    needs: [release]
     steps:
       - uses: actions/checkout@v4
 
@@ -29,7 +60,9 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ env.IMAGE }}:latest
+          tags: |
+            ${{ env.IMAGE }}:latest
+            ${{ env.IMAGE }}:${{ needs.release.outputs.version }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
