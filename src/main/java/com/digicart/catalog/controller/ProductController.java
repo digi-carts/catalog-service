@@ -66,7 +66,7 @@ public class ProductController {
         if (storeId == null || storeId.isBlank())
             return ResponseEntity.badRequest().body(Map.of("error", "x-store-id required"));
         return productService.findById(storeId, id)
-            .map(p -> ResponseEntity.ok(Map.of("product", p)))
+            .<ResponseEntity<?>>map(p -> ResponseEntity.ok(Map.of("product", p)))
             .orElse(ResponseEntity.status(404).body(Map.of("error", "Product not found")));
     }
 

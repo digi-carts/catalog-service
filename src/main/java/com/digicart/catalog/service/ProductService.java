@@ -32,10 +32,16 @@ public class ProductService {
     @Value("${platform.service.url}")
     private String platformServiceUrl;
 
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ProductService.class);
+
     public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
+        this(productRepository, categoryRepository, RestClient.create());
+    }
+
+    ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, RestClient restClient) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
-        this.restClient = RestClient.create();
+        this.restClient = restClient;
     }
 
     public Map<String, Object> findAll(String storeId, String search, String tag,
@@ -162,16 +168,21 @@ public class ProductService {
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
                 @SuppressWarnings("unchecked")
                 Map<String, Object> sub = (Map<String, Object>) response.getBody().get("subscription");
-                int maxProducts = sub != null && sub.get("maxProducts") instanceof Number n
-                    ? n.intValue() : 50;
+                int maxProducts = 50;
+                if (sub != null) {
+                    Object raw = sub.get("maxProducts");
+                    if (raw instanceof Number number) {
+                        maxProducts = number.intValue();
+                    }
+                }
                 long count = productRepository.countByStoreId(storeId);
                 if (count >= maxProducts) throw new IllegalStateException(
                     "Product limit reached. Your plan allows up to " + maxProducts + " products.");
             }
         } catch (IllegalStateException e) {
             throw e;
-        } catch (Exception ignored) {
-            // platform-service unreachable — allow creation
+        } catch (Exception ex) {
+            log.debug("platform-service unreachable; allowing product creation", ex);
         }
     }
 
