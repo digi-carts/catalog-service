@@ -9,6 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
+/**
+ * Application service implementing category use cases for <em>catalog-service</em>.
+ */
 @Service
 public class CategoryService {
 

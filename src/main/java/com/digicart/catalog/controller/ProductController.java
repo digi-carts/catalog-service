@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * REST controller exposing product HTTP APIs for <em>catalog-service</em>.
+ */
 @RestController
 @RequestMapping("/products")
 public class ProductController {
