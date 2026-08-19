@@ -49,7 +49,7 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     Optional<Product> findByStoreIdAndNameIgnoreCase(@Param("storeId") String storeId, @Param("name") String name);
 
     @Query("SELECT p FROM Product p WHERE p.storeId = :storeId AND LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))")
-    Optional<Product> findFirstByStoreIdAndNameContainingIgnoreCase(@Param("storeId") String storeId, @Param("name") String name, Pageable pageable);
+    Optional<Product> findFirstByStoreIdAndNameContainingIgnoreCase(@Param("storeId") String storeId, @Param("name") String name);
 
     @Modifying
     @Query("UPDATE Product p SET p.stock = p.stock - :qty WHERE p.id = :id AND p.stock >= :qty")
