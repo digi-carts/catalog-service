@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * REST controller exposing category HTTP APIs for <em>catalog-service</em>.
+ */
 @RestController
 @RequestMapping("/categories")
 public class CategoryController {

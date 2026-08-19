@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Maps domain and validation failures to HTTP error payloads.
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

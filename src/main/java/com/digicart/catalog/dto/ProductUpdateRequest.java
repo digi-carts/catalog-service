@@ -2,6 +2,9 @@ package com.digicart.catalog.dto;
 
 import java.util.List;
 
+/**
+ * Request/response DTO: Product Update Request.
+ */
 public record ProductUpdateRequest(
     String name,
     String description,

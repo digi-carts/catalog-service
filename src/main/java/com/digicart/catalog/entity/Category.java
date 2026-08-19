@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * JPA entity mapped in this service schema (Category).
+ */
 @Entity
 @Table(name = "category", schema = "catalog_svc")
 @EntityListeners(AuditingEntityListener.class)

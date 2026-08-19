@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Immutable data record Category Tree Node.
+ */
 public record CategoryTreeNode(
     UUID id,
     String name,

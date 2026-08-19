@@ -17,6 +17,9 @@ import org.springframework.web.client.RestClient;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Application service implementing product use cases for <em>catalog-service</em>.
+ */
 @Service
 public class ProductService {
 

@@ -5,6 +5,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import java.util.List;
 
+/**
+ * Request/response DTO: Product Create Request.
+ */
 public record ProductCreateRequest(
     @NotBlank String name,
     String description,

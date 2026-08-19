@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Spring Data JPA repository for category  persistence.
+ */
 public interface CategoryRepository extends JpaRepository<Category, UUID> {
     List<Category> findByStoreIdOrderByNameAsc(String storeId);
     Optional<Category> findByStoreIdAndNameAndParentIsNull(String storeId, String name);

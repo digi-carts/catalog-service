@@ -13,6 +13,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * Spring Data JPA repository for product  persistence.
+ */
 public interface ProductRepository extends JpaRepository<Product, UUID> {
 
     @Query("SELECT p FROM Product p LEFT JOIN FETCH p.category WHERE p.storeId = :storeId " +
