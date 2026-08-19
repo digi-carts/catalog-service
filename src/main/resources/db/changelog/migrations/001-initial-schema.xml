@@ -5,7 +5,8 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
 
-    <changeSet id="001-create-schema" author="digi-cart">
+    <changeSet id="001-create-schema" author="digi-cart" runAlways="true">
+        <validCheckSum>ANY</validCheckSum>
         <sql>CREATE SCHEMA IF NOT EXISTS catalog_svc</sql>
     </changeSet>
 
@@ -61,13 +62,13 @@
             <column name="stock" type="INTEGER" defaultValueNumeric="0">
                 <constraints nullable="false"/>
             </column>
-            <column name="images" type="JSONB" defaultValue="'[]'::jsonb">
+            <column name="images" type="JSONB" defaultValueComputed="'[]'::jsonb">
                 <constraints nullable="false"/>
             </column>
-            <column name="tags" type="JSONB" defaultValue="'[]'::jsonb">
+            <column name="tags" type="JSONB" defaultValueComputed="'[]'::jsonb">
                 <constraints nullable="false"/>
             </column>
-            <column name="specs" type="JSONB" defaultValue="'[]'::jsonb">
+            <column name="specs" type="JSONB" defaultValueComputed="'[]'::jsonb">
                 <constraints nullable="false"/>
             </column>
             <column name="created_at" type="TIMESTAMPTZ" defaultValueComputed="NOW()">

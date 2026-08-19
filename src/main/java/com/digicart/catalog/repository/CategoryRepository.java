@@ -2,6 +2,8 @@ package com.digicart.catalog.repository;
 
 import com.digicart.catalog.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +20,7 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
      * @return matching records
      */
     List<Category> findByStoreIdOrderByNameAsc(String storeId);
+
     /**
      * Finds by store id and name and parent is null.
      *
@@ -26,6 +29,7 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
      * @return the value if present
      */
     Optional<Category> findByStoreIdAndNameAndParentIsNull(String storeId, String name);
+
     /**
      * Finds by store id and name and parent id.
      *
@@ -34,9 +38,11 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
      * @param parentId parent id
      * @return the value if present
      */
-    Optional<Category> findByStoreIdAndNameAndParentId(String storeId, String name, UUID parentId);
+    @Query("SELECT c FROM Category c WHERE c.storeId = :storeId AND c.name = :name AND c.parent.id = :parentId")
+    Optional<Category> findByStoreIdAndNameAndParentId(@Param("storeId") String storeId, @Param("name") String name, @Param("parentId") UUID parentId);
+
     /**
-     * Returns whether by id and store id exists.
+     * Returns whether a category exists for the id and store.
      *
      * @param id resource identifier
      * @param storeId store (tenant) identifier

@@ -173,7 +173,7 @@ public class ProductService {
         Optional<Product> byName = productRepository.findByStoreIdAndNameIgnoreCase(storeId, namePattern);
         if (byName.isPresent()) return byName;
         return productRepository.findFirstByStoreIdAndNameContainingIgnoreCase(
-            storeId, namePattern, PageRequest.of(0, 1));
+            storeId, namePattern);
     }
 
     /**
