@@ -20,10 +20,21 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
+    /**
+     * Creates a new {@code CategoryController}.
+     *
+     * @param categoryService category service collaborator
+     */
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
 
+    /**
+     * Handles GET.
+     *
+     * @param storeId store (tenant) identifier
+     * @return HTTP response
+     */
     @GetMapping
     public ResponseEntity<?> list(@RequestHeader(value = "x-store-id", required = false) String storeId) {
         if (storeId == null || storeId.isBlank())
@@ -34,6 +45,13 @@ public class CategoryController {
         return ResponseEntity.ok(Map.of("categories", categories, "tree", tree));
     }
 
+    /**
+     * Handles POST.
+     *
+     * @param storeId store (tenant) identifier
+     * @param req request payload
+     * @return HTTP response
+     */
     @PostMapping
     public ResponseEntity<?> create(
         @RequestHeader(value = "x-store-id", required = false) String storeId,
@@ -46,6 +64,13 @@ public class CategoryController {
         return ResponseEntity.status(201).body(Map.of("category", category));
     }
 
+    /**
+     * Handles {@code DELETE /{id}}.
+     *
+     * @param id resource identifier
+     * @param storeId store (tenant) identifier
+     * @return HTTP response
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(
         @PathVariable UUID id,

@@ -34,6 +34,12 @@ public class ProductService {
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ProductService.class);
 
+    /**
+     * Creates a new {@code ProductService}.
+     *
+     * @param productRepository product repository collaborator
+     * @param categoryRepository category repository collaborator
+     */
     public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
         this(productRepository, categoryRepository, RestClient.create());
     }
@@ -44,6 +50,18 @@ public class ProductService {
         this.restClient = restClient;
     }
 
+    /**
+     * Finds all.
+     *
+     * @param storeId store (tenant) identifier
+     * @param search free-text search
+     * @param tag product tag filter
+     * @param categoryParam category param
+     * @param sort sort expression
+     * @param page 1-based page index
+     * @param limit page size
+     * @return the map
+     */
     public Map<String, Object> findAll(String storeId, String search, String tag,
                                        String categoryParam, String sort, int page, int limit) {
         Set<UUID> categoryIds = resolveCategoryIds(storeId, categoryParam);
@@ -105,6 +123,12 @@ public class ProductService {
         };
     }
 
+    /**
+     * Stock summary.
+     *
+     * @param storeId store (tenant) identifier
+     * @return the map
+     */
     public Map<String, Object> stockSummary(String storeId) {
         long total = productRepository.countByStoreId(storeId);
         long outOfStock = productRepository.countByStoreIdAndStock(storeId, 0);
@@ -119,6 +143,12 @@ public class ProductService {
         return Map.of("total", total, "outOfStock", outOfStock, "lowStock", lowStock, "topLow", topLowDto);
     }
 
+    /**
+     * Finds tags.
+     *
+     * @param storeId store (tenant) identifier
+     * @return matching records
+     */
     public List<String> findTags(String storeId) {
         return productRepository.findAll().stream()
             .filter(p -> p.getStoreId().equals(storeId))
@@ -126,6 +156,13 @@ public class ProductService {
             .distinct().sorted().collect(Collectors.toList());
     }
 
+    /**
+     * Finds by id.
+     *
+     * @param storeId store (tenant) identifier
+     * @param idOrSlug id or slug
+     * @return the value if present
+     */
     public Optional<Product> findById(String storeId, String idOrSlug) {
         boolean isUuid = idOrSlug.matches("[0-9a-f-]{36}");
         if (isUuid) {
@@ -139,6 +176,14 @@ public class ProductService {
             storeId, namePattern, PageRequest.of(0, 1));
     }
 
+    /**
+     * Creates a new record.
+     *
+     * @param storeId store (tenant) identifier
+     * @param userEmail caller email ({@code x-user-email})
+     * @param req request payload
+     * @return the product
+     */
     @Transactional
     public Product create(String storeId, String userEmail, ProductCreateRequest req) {
         if (userEmail != null) enforceProductLimit(storeId, userEmail);
@@ -186,6 +231,14 @@ public class ProductService {
         }
     }
 
+    /**
+     * Updates an existing record.
+     *
+     * @param id resource identifier
+     * @param storeId store (tenant) identifier
+     * @param req request payload
+     * @return the product
+     */
     @Transactional
     public Product update(UUID id, String storeId, ProductUpdateRequest req) {
         Product product = productRepository.findByIdAndStoreId(id, storeId)
@@ -208,6 +261,13 @@ public class ProductService {
         return productRepository.save(product);
     }
 
+    /**
+     * Deletes the record.
+     *
+     * @param id resource identifier
+     * @param storeId store (tenant) identifier
+     * @param role caller role
+     */
     @Transactional
     public void delete(UUID id, String storeId, String role) {
         Product product = productRepository.findById(id)
@@ -221,6 +281,11 @@ public class ProductService {
         productRepository.delete(product);
     }
 
+    /**
+     * Deduct stock.
+     *
+     * @param req request payload
+     */
     @Transactional
     public void deductStock(StockDeductRequest req) {
         for (var item : req.items()) {
@@ -228,6 +293,14 @@ public class ProductService {
         }
     }
 
+    /**
+     * Add image url.
+     *
+     * @param productId product id
+     * @param storeId store (tenant) identifier
+     * @param url url
+     * @return the product
+     */
     @Transactional
     public Product addImageUrl(UUID productId, String storeId, String url) {
         Product product = productRepository.findByIdAndStoreId(productId, storeId)

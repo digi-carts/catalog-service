@@ -17,14 +17,31 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
+    /**
+     * Creates a new {@code CategoryService}.
+     *
+     * @param categoryRepository category repository collaborator
+     */
     public CategoryService(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
 
+    /**
+     * Finds by store.
+     *
+     * @param storeId store (tenant) identifier
+     * @return matching records
+     */
     public List<Category> findByStore(String storeId) {
         return categoryRepository.findByStoreIdOrderByNameAsc(storeId);
     }
 
+    /**
+     * Build tree.
+     *
+     * @param categories categories
+     * @return matching records
+     */
     public List<CategoryTreeNode> buildTree(List<Category> categories) {
         Map<UUID, CategoryTreeNode> map = new LinkedHashMap<>();
         for (Category c : categories) {
@@ -42,6 +59,13 @@ public class CategoryService {
         return roots;
     }
 
+    /**
+     * Creates a new record.
+     *
+     * @param storeId store (tenant) identifier
+     * @param req request payload
+     * @return the category
+     */
     @Transactional
     public Category create(String storeId, CategoryRequest req) {
         UUID parentId = req.parentId() != null && !req.parentId().isBlank()
@@ -62,6 +86,12 @@ public class CategoryService {
         return categoryRepository.save(category);
     }
 
+    /**
+     * Deletes the record.
+     *
+     * @param id resource identifier
+     * @param storeId store (tenant) identifier
+     */
     @Transactional
     public void delete(UUID id, String storeId) {
         Category cat = categoryRepository.findById(id)

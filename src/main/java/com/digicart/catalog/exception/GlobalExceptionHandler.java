@@ -13,7 +13,12 @@ import java.util.stream.Collectors;
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
+    /**
+     * Handle validation.
+     *
+     * @param ex ex
+     * @return HTTP response
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleValidation(MethodArgumentNotValidException ex) {
         var errors = ex.getBindingResult().getFieldErrors().stream()
@@ -25,11 +30,23 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(Map.of("error", errors));
     }
 
+    /**
+     * Handle bad arg.
+     *
+     * @param ex ex
+     * @return HTTP response
+     */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> handleBadArg(IllegalArgumentException ex) {
         return ResponseEntity.badRequest().body(Map.of("error", ex.getMessage()));
     }
 
+    /**
+     * Handle generic.
+     *
+     * @param ex ex
+     * @return HTTP response
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleGeneric(Exception ex) {
         return ResponseEntity.internalServerError().body(Map.of("error", "Internal server error"));

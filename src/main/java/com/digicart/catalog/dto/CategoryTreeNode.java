@@ -14,6 +14,14 @@ public record CategoryTreeNode(
     long productCount,
     List<CategoryTreeNode> children
 ) {
+    /**
+     * Creates a new {@code CategoryTreeNode}.
+     *
+     * @param id resource identifier
+     * @param name name
+     * @param parentId parent id
+     * @param productCount product count
+     */
     public CategoryTreeNode(UUID id, String name, UUID parentId, long productCount) {
         this(id, name, parentId, productCount, new ArrayList<>());
     }
