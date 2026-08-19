@@ -12,7 +12,6 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
-    default-schema: catalog_svc
     liquibase-schema: catalog_svc
   servlet:
     multipart:
