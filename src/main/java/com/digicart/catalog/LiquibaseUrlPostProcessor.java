@@ -7,6 +7,8 @@ import org.springframework.core.env.MapPropertySource;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class LiquibaseUrlPostProcessor implements EnvironmentPostProcessor {
 
@@ -15,9 +17,16 @@ public class LiquibaseUrlPostProcessor implements EnvironmentPostProcessor {
         String dbUrl = environment.getProperty("DATABASE_URL");
         if (dbUrl == null || !dbUrl.contains("currentSchema=")) return;
 
-        String liquibaseUrl = dbUrl.replaceAll("[&?]currentSchema=[^&]*", "").replaceAll("[&?]$", "");
+        Matcher m = Pattern.compile("[?&]currentSchema=([^&]+)").matcher(dbUrl);
+        String schema = m.find() ? m.group(1) : null;
+
+        String cleanUrl = dbUrl.replaceAll("[&?]currentSchema=[^&]*", "").replaceAll("[?&]$", "");
+
         Map<String, Object> props = new HashMap<>();
-        props.put("spring.liquibase.url", liquibaseUrl);
+        props.put("spring.datasource.url", cleanUrl);
+        if (schema != null && !schema.isEmpty()) {
+            props.put("spring.jpa.properties.hibernate.default_schema", schema);
+        }
         environment.getPropertySources().addFirst(new MapPropertySource("liquibase-url-cleanup", props));
     }
 }
