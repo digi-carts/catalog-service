@@ -19,7 +19,7 @@ import java.util.UUID;
 public interface ProductRepository extends JpaRepository<Product, UUID> {
 
     @Query("SELECT p FROM Product p LEFT JOIN FETCH p.category WHERE p.storeId = :storeId " +
-           "AND (:search IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', COALESCE(:search, ''), '%'))) " +
+           "AND (:search = '' OR LOWER(p.name) LIKE LOWER(CONCAT('%', :search, '%'))) " +
            "AND (:#{#categoryIds == null || #categoryIds.isEmpty()} = true OR p.category.id IN :categoryIds)")
     List<Product> findFiltered(
         @Param("storeId") String storeId,
@@ -29,7 +29,7 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     );
 
     @Query("SELECT COUNT(p) FROM Product p WHERE p.storeId = :storeId " +
-           "AND (:search IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', COALESCE(:search, ''), '%'))) " +
+           "AND (:search = '' OR LOWER(p.name) LIKE LOWER(CONCAT('%', :search, '%'))) " +
            "AND (:#{#categoryIds == null || #categoryIds.isEmpty()} = true OR p.category.id IN :categoryIds)")
     long countFiltered(
         @Param("storeId") String storeId,

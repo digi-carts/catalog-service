@@ -45,8 +45,9 @@ public class ProductService {
         Sort sorting = resolveSort(sort);
         PageRequest pageRequest = PageRequest.of(page - 1, limit, sorting);
 
-        List<Product> products = productRepository.findFiltered(storeId, search, categoryIds, pageRequest);
-        long total = productRepository.countFiltered(storeId, search, categoryIds);
+        String searchParam = (search == null || search.isBlank()) ? "" : search;
+        List<Product> products = productRepository.findFiltered(storeId, searchParam, categoryIds, pageRequest);
+        long total = productRepository.countFiltered(storeId, searchParam, categoryIds);
 
         // In-memory tag filter (tags stored as JSON array)
         if (tag != null && !tag.isBlank()) {
