@@ -60,7 +60,7 @@ public class ProductService {
     }
 
     private Set<UUID> resolveCategoryIds(String storeId, String categoryParam) {
-        if (categoryParam == null || categoryParam.isBlank()) return null;
+        if (categoryParam == null || categoryParam.isBlank()) return Collections.emptySet();
 
         List<Category> allCats = categoryRepository.findByStoreIdOrderByNameAsc(storeId);
         boolean isUuid = categoryParam.matches("[0-9a-f-]{36}");
