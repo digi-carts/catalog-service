@@ -30,7 +30,7 @@ public class CategoryController {
             return ResponseEntity.badRequest().body(Map.of("error", "x-store-id required"));
 
         List<Category> categories = categoryService.findByStore(storeId);
-        var tree = categoryService.buildTree(categories);
+        var tree = categoryService.buildTree(storeId, categories);
         return ResponseEntity.ok(Map.of("categories", categories, "tree", tree));
     }
 
