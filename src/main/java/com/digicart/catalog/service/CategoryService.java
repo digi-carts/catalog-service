@@ -28,6 +28,7 @@ public class CategoryService {
 
     @Transactional(readOnly = true)
     public List<CategoryTreeNode> buildTree(String storeId, List<Category> categories) {
+        if (categories.isEmpty()) return List.of();
         Map<UUID, Long> counts = categoryRepository.countProductsPerCategory(storeId)
                 .stream()
                 .collect(Collectors.toMap(r -> (UUID) r[0], r -> ((Number) r[1]).longValue()));
