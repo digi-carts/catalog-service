@@ -115,8 +115,7 @@ public class ProductService {
     }
 
     public List<String> findTags(String storeId) {
-        return productRepository.findAll().stream()
-            .filter(p -> p.getStoreId().equals(storeId))
+        return productRepository.findByStoreId(storeId).stream()
             .flatMap(p -> p.getTags().stream())
             .distinct().sorted().collect(Collectors.toList());
     }

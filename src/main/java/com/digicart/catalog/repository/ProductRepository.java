@@ -1,7 +1,6 @@
 package com.digicart.catalog.repository;
 
 import com.digicart.catalog.entity.Product;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -57,4 +56,6 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     @Modifying
     @Query("UPDATE Product p SET p.stock = p.stock - :qty WHERE p.id = :id AND p.stock >= :qty")
     int deductStock(@Param("id") UUID id, @Param("qty") int qty);
+
+    List<Product> findByStoreId(String storeId);
 }

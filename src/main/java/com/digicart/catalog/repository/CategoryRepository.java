@@ -20,4 +20,7 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
     Optional<Category> findByStoreIdAndNameAndParentId(@Param("storeId") String storeId, @Param("name") String name, @Param("parentId") UUID parentId);
 
     boolean existsByIdAndStoreId(UUID id, String storeId);
+
+    @Query("SELECT c.id, COUNT(p) FROM Category c LEFT JOIN c.products p WHERE c.storeId = :storeId GROUP BY c.id")
+    List<Object[]> countProductsPerCategory(@Param("storeId") String storeId);
 }
