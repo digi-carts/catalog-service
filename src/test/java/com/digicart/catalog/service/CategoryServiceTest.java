@@ -17,7 +17,7 @@ class CategoryServiceTest {
         root.setStoreId("s1");
         root.setName("Root");
         // id is generated; without id, tree uses null keys — only test empty products list
-        List<?> tree = categoryService.buildTree(List.of());
+        List<?> tree = categoryService.buildTree("s1", List.of());
         assertThat(tree).isEmpty();
     }
 }

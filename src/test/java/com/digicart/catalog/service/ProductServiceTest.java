@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -39,8 +40,8 @@ class ProductServiceTest {
         Product p = new Product();
         p.setStoreId("s1");
         p.setName("Mug");
-        when(productRepository.findFiltered(eq("s1"), eq(null), eq(null), any(PageRequest.class))).thenReturn(List.of(p));
-        when(productRepository.countFiltered("s1", null, null)).thenReturn(1L);
+        when(productRepository.findFiltered(eq("s1"), eq(""), eq(Collections.emptySet()), any(PageRequest.class))).thenReturn(List.of(p));
+        when(productRepository.countFiltered("s1", "", Collections.emptySet())).thenReturn(1L);
 
         Map<String, Object> result = productService.findAll("s1", null, null, null, null, 1, 20);
         assertThat(result.get("total")).isEqualTo(1L);
@@ -68,10 +69,7 @@ class ProductServiceTest {
         Product b = new Product();
         b.setStoreId("s1");
         b.setTags(List.of("sale", "new"));
-        Product other = new Product();
-        other.setStoreId("other");
-        other.setTags(List.of("ignore"));
-        when(productRepository.findAll()).thenReturn(List.of(a, b, other));
+        when(productRepository.findByStoreId("s1")).thenReturn(List.of(a, b));
         assertThat(productService.findTags("s1")).containsExactly("new", "red", "sale");
     }
 }
