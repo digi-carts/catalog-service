@@ -101,14 +101,15 @@ public class ProductController {
         if (!"merchant".equalsIgnoreCase(userRole) && !"superadmin".equalsIgnoreCase(userRole)) {
             return ResponseEntity.status(403).body(Map.of("error", "Forbidden"));
         }
-        if (file != null) {
-            String ct = file.getContentType();
-            List<String> allowed = List.of("image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml");
-            if (ct == null || !allowed.contains(ct)) {
-                return ResponseEntity.badRequest().body(Map.of("error", "Invalid file type"));
-            }
+        if (file == null || file.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Invalid file type"));
         }
-        String filename = file != null && file.getOriginalFilename() != null ? file.getOriginalFilename() : "upload";
+        String ct = file.getContentType();
+        List<String> allowed = List.of("image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml");
+        if (ct == null || !allowed.contains(ct)) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Invalid file type"));
+        }
+        String filename = file.getOriginalFilename() != null ? file.getOriginalFilename() : "upload";
         return ResponseEntity.ok(Map.of("url", "/uploads/" + filename));
     }
 
