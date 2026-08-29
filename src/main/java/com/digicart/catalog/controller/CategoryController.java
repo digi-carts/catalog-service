@@ -11,8 +11,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * REST controller exposing category HTTP APIs for <em>catalog-service</em>.
+ */
 @RestController
-@RequestMapping("/categories")
+@RequestMapping("/api/categories")
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -27,7 +30,7 @@ public class CategoryController {
             return ResponseEntity.badRequest().body(Map.of("error", "x-store-id required"));
 
         List<Category> categories = categoryService.findByStore(storeId);
-        var tree = categoryService.buildTree(categories);
+        var tree = categoryService.buildTree(storeId, categories);
         return ResponseEntity.ok(Map.of("categories", categories, "tree", tree));
     }
 

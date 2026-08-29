@@ -12,7 +12,7 @@
 
     <groupId>com.digicart</groupId>
     <artifactId>catalog-service</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <name>catalog-service</name>
     <description>digi-cart catalog service</description>
 

@@ -1,7 +1,6 @@
 package com.digicart.catalog.repository;
 
 import com.digicart.catalog.entity.Product;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -13,10 +12,13 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * Spring Data JPA repository for product  persistence.
+ */
 public interface ProductRepository extends JpaRepository<Product, UUID> {
 
     @Query("SELECT p FROM Product p LEFT JOIN FETCH p.category WHERE p.storeId = :storeId " +
-           "AND (:search IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :search, '%'))) " +
+           "AND (:search = '' OR LOWER(p.name) LIKE LOWER(CONCAT('%', :search, '%'))) " +
            "AND (:#{#categoryIds == null || #categoryIds.isEmpty()} = true OR p.category.id IN :categoryIds)")
     List<Product> findFiltered(
         @Param("storeId") String storeId,
@@ -26,7 +28,7 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     );
 
     @Query("SELECT COUNT(p) FROM Product p WHERE p.storeId = :storeId " +
-           "AND (:search IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :search, '%'))) " +
+           "AND (:search = '' OR LOWER(p.name) LIKE LOWER(CONCAT('%', :search, '%'))) " +
            "AND (:#{#categoryIds == null || #categoryIds.isEmpty()} = true OR p.category.id IN :categoryIds)")
     long countFiltered(
         @Param("storeId") String storeId,
@@ -54,4 +56,6 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     @Modifying
     @Query("UPDATE Product p SET p.stock = p.stock - :qty WHERE p.id = :id AND p.stock >= :qty")
     int deductStock(@Param("id") UUID id, @Param("qty") int qty);
+
+    List<Product> findByStoreId(String storeId);
 }

@@ -9,11 +9,16 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * REST controller exposing product HTTP APIs for <em>catalog-service</em>.
+ */
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/api/products")
 public class ProductController {
 
     private final ProductService productService;
@@ -71,8 +76,12 @@ public class ProductController {
     public ResponseEntity<?> create(
         @RequestHeader(value = "x-store-id", required = false) String storeId,
         @RequestHeader(value = "x-user-email", required = false) String userEmail,
+        @RequestHeader(value = "x-user-role", required = false) String userRole,
         @Valid @RequestBody ProductCreateRequest req
     ) {
+        if (!"merchant".equalsIgnoreCase(userRole) && !"superadmin".equalsIgnoreCase(userRole)) {
+            return ResponseEntity.status(403).body(Map.of("error", "Forbidden"));
+        }
         if (storeId == null || storeId.isBlank())
             return ResponseEntity.badRequest().body(Map.of("error", "x-store-id header required"));
         try {
@@ -81,6 +90,27 @@ public class ProductController {
         } catch (IllegalStateException e) {
             return ResponseEntity.status(403).body(Map.of("error", e.getMessage()));
         }
+    }
+
+    @PostMapping("/{id}/images")
+    public ResponseEntity<?> uploadImage(
+        @PathVariable String id,
+        @RequestHeader(value = "x-user-role", required = false) String userRole,
+        @RequestParam(value = "file", required = false) MultipartFile file
+    ) {
+        if (!"merchant".equalsIgnoreCase(userRole) && !"superadmin".equalsIgnoreCase(userRole)) {
+            return ResponseEntity.status(403).body(Map.of("error", "Forbidden"));
+        }
+        if (file == null || file.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Invalid file type"));
+        }
+        String ct = file.getContentType();
+        List<String> allowed = List.of("image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml");
+        if (ct == null || !allowed.contains(ct)) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Invalid file type"));
+        }
+        String filename = file.getOriginalFilename() != null ? file.getOriginalFilename() : "upload";
+        return ResponseEntity.ok(Map.of("url", "/uploads/" + filename));
     }
 
     @PatchMapping("/{id}")

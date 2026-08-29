@@ -8,7 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
+/**
+ * Application service implementing category use cases for <em>catalog-service</em>.
+ */
 @Service
 public class CategoryService {
 
@@ -22,10 +26,16 @@ public class CategoryService {
         return categoryRepository.findByStoreIdOrderByNameAsc(storeId);
     }
 
-    public List<CategoryTreeNode> buildTree(List<Category> categories) {
+    @Transactional(readOnly = true)
+    public List<CategoryTreeNode> buildTree(String storeId, List<Category> categories) {
+        if (categories.isEmpty()) return List.of();
+        Map<UUID, Long> counts = categoryRepository.countProductsPerCategory(storeId)
+                .stream()
+                .collect(Collectors.toMap(r -> (UUID) r[0], r -> ((Number) r[1]).longValue()));
+
         Map<UUID, CategoryTreeNode> map = new LinkedHashMap<>();
         for (Category c : categories) {
-            long count = c.getProducts().size();
+            long count = counts.getOrDefault(c.getId(), 0L);
             map.put(c.getId(), new CategoryTreeNode(c.getId(), c.getName(), c.getParentId(), count));
         }
         List<CategoryTreeNode> roots = new ArrayList<>();
@@ -47,7 +57,7 @@ public class CategoryService {
         // Return existing if duplicate
         Optional<Category> existing = parentId == null
             ? categoryRepository.findByStoreIdAndNameAndParentIsNull(storeId, req.name())
-            : categoryRepository.findByStoreIdAndNameAndParent_Id(storeId, req.name(), parentId);
+            : categoryRepository.findByStoreIdAndNameAndParentId(storeId, req.name(), parentId);
         if (existing.isPresent()) return existing.get();
 
         Category category = new Category();

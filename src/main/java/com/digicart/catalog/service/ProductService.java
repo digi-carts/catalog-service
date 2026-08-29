@@ -17,6 +17,9 @@ import org.springframework.web.client.RestClient;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Application service implementing product use cases for <em>catalog-service</em>.
+ */
 @Service
 public class ProductService {
 
@@ -42,8 +45,9 @@ public class ProductService {
         Sort sorting = resolveSort(sort);
         PageRequest pageRequest = PageRequest.of(page - 1, limit, sorting);
 
-        List<Product> products = productRepository.findFiltered(storeId, search, categoryIds, pageRequest);
-        long total = productRepository.countFiltered(storeId, search, categoryIds);
+        String searchParam = (search == null || search.isBlank()) ? "" : search;
+        List<Product> products = productRepository.findFiltered(storeId, searchParam, categoryIds, pageRequest);
+        long total = productRepository.countFiltered(storeId, searchParam, categoryIds);
 
         // In-memory tag filter (tags stored as JSON array)
         if (tag != null && !tag.isBlank()) {
@@ -57,7 +61,7 @@ public class ProductService {
     }
 
     private Set<UUID> resolveCategoryIds(String storeId, String categoryParam) {
-        if (categoryParam == null || categoryParam.isBlank()) return null;
+        if (categoryParam == null || categoryParam.isBlank()) return Collections.emptySet();
 
         List<Category> allCats = categoryRepository.findByStoreIdOrderByNameAsc(storeId);
         boolean isUuid = categoryParam.matches("[0-9a-f-]{36}");
@@ -111,8 +115,7 @@ public class ProductService {
     }
 
     public List<String> findTags(String storeId) {
-        return productRepository.findAll().stream()
-            .filter(p -> p.getStoreId().equals(storeId))
+        return productRepository.findByStoreId(storeId).stream()
             .flatMap(p -> p.getTags().stream())
             .distinct().sorted().collect(Collectors.toList());
     }
