@@ -22,6 +22,12 @@ spring:
       max-file-size: 5MB
       max-request-size: 5MB
 
+  cloud:
+    gcp:
+      trace:
+        enabled: true
+        sampling-rate: 1.0
+
 server:
   port: ${PORT:3004}
 
@@ -31,3 +37,12 @@ platform:
 
 gcs:
   bucket: ${GCS_BUCKET:}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  tracing:
+    sampling:
+      probability: 1.0
