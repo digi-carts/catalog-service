@@ -33,9 +33,9 @@ spring:
 server:
   port: ${PORT:3004}
 
-platform:
+subscription:
   service:
-    url: ${PLATFORM_SERVICE_URL:http://platform-service:3002}
+    url: ${SUBSCRIPTION_SERVICE_URL:http://subscription-service:3013}
 
 gcs:
   bucket: ${GCS_BUCKET:}

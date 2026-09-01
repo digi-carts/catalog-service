@@ -29,8 +29,8 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
     private final RestClient restClient;
 
-    @Value("${platform.service.url}")
-    private String platformServiceUrl;
+    @Value("${subscription.service.url}")
+    private String subscriptionServiceUrl;
 
     public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
@@ -155,8 +155,8 @@ public class ProductService {
     private void enforceProductLimit(String storeId, String userEmail) {
         try {
             var response = restClient.get()
-                .uri(platformServiceUrl + "/subscription-status")
-                .header("x-user-email", userEmail)
+                .uri(subscriptionServiceUrl + "/api/subscription/status")
+                .header("X-User-Email", userEmail)
                 .retrieve()
                 .toEntity(Map.class);
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
