@@ -1,6 +1,7 @@
 package com.digicart.catalog.entity;
 
 import com.digicart.catalog.dto.Spec;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -66,6 +67,7 @@ public class Product {
     public UUID getId() { return id; }
     public String getStoreId() { return storeId; }
     public void setStoreId(String storeId) { this.storeId = storeId; }
+    @JsonIgnore
     public Category getCategory() { return category; }
     public void setCategory(Category category) { this.category = category; }
     public UUID getCategoryId() { return category != null ? category.getId() : null; }
