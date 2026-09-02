@@ -1,5 +1,6 @@
 package com.digicart.catalog.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -48,7 +49,9 @@ public class Category {
     public void setName(String name) { this.name = name; }
     public Category getParent() { return parent; }
     public void setParent(Category parent) { this.parent = parent; }
+    @JsonIgnore
     public List<Category> getChildren() { return children; }
+    @JsonIgnore
     public List<Product> getProducts() { return products; }
     public Instant getCreatedAt() { return createdAt; }
 
